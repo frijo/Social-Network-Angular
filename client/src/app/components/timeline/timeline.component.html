@@ -1,0 +1,116 @@
+<div class="col-lg-8">
+	<h1 class="h1-strong">{{title}}
+		<button class="btn btn-success pull-right btn-sm" (click)="refresh($event)">Refrescar Publicaciones</button>
+	</h1>
+	
+	<div id="publications" *ngIf="publications && publications.length">
+		<div class="item-publication" *ngFor="let publication of publications">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					
+					<div class="image-user pull-left">
+						<a [routerLink]="['/profile',publication.user._id]">
+							<img src="{{url + 'get-image-user/' +publication.user.image}}" *ngIf="publication.user.image">
+							<img src="assets/images/user.png" *ngIf="!publication.user.image">
+						</a>
+					</div>
+					<div>
+							<a [routerLink]="['/profile',publication.user._id]" class="user-name">{{publication.user.name +' '+publication.user.surname}}</a>
+									
+							&nbsp; | &nbsp;
+							<span class="date">
+								{{ (publication.created_at | amFromUnix) | amLocale: 'es' | amTimeAgo}}
+							</span>
+					</div>
+					
+
+					<h4 class="publication-text pull-left">
+						{{publication.text}}
+
+					</h4>
+					<div class="col-lg-1 pull-right" *ngIf="publication.user._id == identity._id">
+						<a href="#myModal{{publication._id}}" role ="button" class="btn btn-primary pull-right" data-toggle="modal">
+							<span class="glyphicon glyphicon-trash"></span>
+						</a>
+
+
+						    <!-- Button HTML (to Trigger Modal) -->
+
+						  <!--  <a href="#myModal" role="button" class="btn btn-large btn-primary" data-toggle="modal">Launch Demo Modal</a> -->
+						     
+
+						    <!-- Modal HTML -->
+
+						    <div id="myModal{{publication._id}}" class="modal fade">
+
+						        <div class="modal-dialog">
+
+						            <div class="modal-content">
+
+						                <div class="modal-header">
+
+						                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+						                    <h4 class="modal-title">Confirmacion</h4>
+
+						                </div>
+
+						                <div class="modal-body">
+
+						                    <p>Deseas eliminar esta publicacion permanentemente?</p>
+
+						                    <p class="text-warning"><small>Esta publicacion no se mostrara en tu perfil o publicaciones nunca mas.</small></p>
+
+						                </div>
+
+						                <div class="modal-footer">
+
+						                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+						                    <button type="button" class="btn btn-danger" (click)="deletePublication(publication._id)" data-dismiss="modal">Eliminar publicacion</button>
+
+						                </div>
+
+						            </div>
+
+						        </div>
+
+						    </div>
+
+
+
+
+
+					</div>
+
+
+					<div class="col-lg-12" *ngIf="publication.file !='null'">
+						<button class="btn btn-warning pull-right" (click)="showPublicationImage(publication._id)" *ngIf="showImage != publication._id">
+							<span class="glyphicon glyphicon-picture"></span>
+						</button>
+
+						<button class="btn btn-danger pull-right" (click)="hiddePublicationImage()" *ngIf="showImage == publication._id">
+							<span class="glyphicon glyphicon-remove-circle"></span>
+						</button>	
+					</div>
+					
+					<div class="col-lg-12" *ngIf="publication.file !='null' && showImage == publication._id">
+						<br/>
+						<img src="{{ url + 'get-image-pub/'+ publication.file}}" class="col-lg-12"/>
+					</div>
+				
+				</div>
+			</div>
+			
+		</div>	
+	</div>
+	<div class="col-lg-12 text-center" *ngIf="publications && publications.length">
+		<p>
+			<button class="btn btn-success" (click)="viewMore()" *ngIf ="!noMore" >Ver Mas</button>	
+		</p>
+			
+	</div> 
+	
+</div>
+<sidebar (sended)="refresh($event)"></sidebar>
+<div class="clearfix"></div> 
